@@ -1,0 +1,29 @@
+{
+  "name": "ColaCo-Machine",
+  "version": "1.0.0",
+  "description": "a virtual vending machine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rs5955/ColaCo-Machine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rs5955/ColaCo-Machine/issues"
+  },
+  "homepage": "https://github.com/rs5955/ColaCo-Machine#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hbs": "^4.1.1",
+    "mongoose": "^5.12.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0",
+    "eslint-plugin-mocha": "^8.1.0"
+  }
+}
