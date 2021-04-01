@@ -1,2 +1,2 @@
 # ColaCo-Machine
-a virtual vending machine
+a virtual soda vending machine
