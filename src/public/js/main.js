@@ -1,10 +1,22 @@
 const SODA_API = "http://localhost:3000/api/sodas";
 
+//START CLASSES
+
 class Soda{
-    constructor()
+    constructor(name,desc,cnt,maxQty){
+        this.name = name;
+        this.desc = desc;
+        this.cnt = cnt;
+        this.maxQty = maxQty;
+    }
 }
 
+//END CLASSES
+
 function addSoda(soda){
+    const toAdd = document.createElement("div");
+    toAdd.classList.add("soda");
+    
     
 }
 
@@ -13,9 +25,11 @@ function loadSodas(){
     .then(res=>{
         return res.json();
     })
-    .then(data=>{
-        console.log(data);
-        
+    .then(sodas=>{
+        console.log(sodas);
+        sodas.map(s=>{
+            
+        });
     });
     
     

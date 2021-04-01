@@ -15,7 +15,7 @@ body {
 
 
 #sodaMachine{
-    background-color: orange;
+    background-color: #ffb347;
     padding: 10px;
     
     position: absolute;
@@ -32,7 +32,7 @@ body {
 }
 
 #machineLabel{
-    background-color: aqua;
+    background-color: #add8e6;
 /*    position: relative;*/
 /*
     position: absolute;
@@ -43,6 +43,8 @@ body {
     height: 10%;
     width: 100%;
     font-weight: bold;
+    font-size: 30px;
+    text-align: center;
 }
 
 
@@ -58,10 +60,11 @@ body {
 
 #sodaList{
     display: inline-block;
-    background-color: darkgray;
+    background-color: lightgray;
     height: 100%;
     width: 50%;
     position: relative;
+    overflow: scroll;
 }
 #userMenu{
     display: inline-block;
@@ -70,3 +73,28 @@ body {
     height: 10%;
     position: relative;
 }
+
+
+/*SODA STYLES*/
+.soda{
+    border: 1px solid black;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px gray;
+    margin: 10px;
+    height: 100px;
+/*    width: 100px;*/
+    width: 40%;
+    background-color: white;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+}
+
+.soda:hover{
+    background-color: #e0ffff;
+}
+
+.soda:active{
+    background-color: #d5f5f5;
+}
+/*==========*/
