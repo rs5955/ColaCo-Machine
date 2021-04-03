@@ -1,23 +1,19 @@
 const SODA_API = "http://localhost:3000/api/sodas";
 
-//START CLASSES
 
-class Soda{
-    constructor(name,desc,cnt,maxQty){
-        this.name = name;
-        this.desc = desc;
-        this.cnt = cnt;
-        this.maxQty = maxQty;
-    }
+function test(){
+    console.log("HERE");
 }
-
-//END CLASSES
 
 function addSoda(soda){
     const toAdd = document.createElement("div");
     toAdd.classList.add("soda");
-    
-    
+    toAdd.textContent = "Hey";
+    toAdd.addEventListener("click",()=>{
+        console.log("here");
+    });
+    document.querySelector("#sodaList").appendChild(toAdd);
+    console.log(soda);
 }
 
 function loadSodas(){
@@ -28,7 +24,7 @@ function loadSodas(){
     .then(sodas=>{
         console.log(sodas);
         sodas.map(s=>{
-            
+            addSoda(s);
         });
     });
     
@@ -36,10 +32,15 @@ function loadSodas(){
     
 }
 
+function loadUserInput(){
+    console.log("Here");
+    
+}
+
 function handleLoad(){
     //loads the sodas into the machine
     loadSodas();
-    load
+    loadUserInput();
 }
 
 function main(){
