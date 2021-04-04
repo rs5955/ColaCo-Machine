@@ -1,6 +1,7 @@
 const SODA_API = "api/sodas";
 const UPDATE_API = "api/soda/update";
 
+//object to hold state of machine and any global variables
 const MACHINE_STATE = {
     loadedSodas: [], //list of sodas 
     inAdminState: undefined, //0 = user panel, 1 = admin panel
@@ -18,9 +19,11 @@ function clearChildren(selector){
     }
 }
 
+//update the text inside the status bar
 function updateStatusBar(content){
     console.log(...content); //an array
     clearChildren("#statusBar")
+    const statusBar = document.querySelector("#statusBar");
     
     content.map(line=>{
         const newNode = document.createTextNode(line);
@@ -156,9 +159,51 @@ function setSwapBtn(){
     });
 }
 
+//ADMIN BUTTON FUNCTIONALITY
+//update the text inside the admin panel
+//function updateAdminMain(content){
+//    console.log(...content); //an array
+//    clearChildren("#adminMain")
+//    const adminMain = document.querySelector("#adminMain");
+//    
+//    content.map(line=>{
+//        if (typeof line === 'string' || line instanceof String){
+//            const newNode = document.createTextNode(line);
+//            adminMain.appendChild(newNode);
+//        }else{
+//            /* 
+//            
+//            eg.
+//            {
+//                element: p,
+//                text: zzz, //optional
+//            }
+//            */
+//            const newNode = document.createElement(line['element']);
+//            console.log(line['element']===undefined);
+//            if(line['element']!==undefined){
+//                newNode.appendChild(document.createTextNode(line['text']));
+//            }else{
+//                console.log("TEST");
+//            }
+//            adminMain.appendChild(newNode);   
+//        }
+//        
+//    });
+//}
+
 function setStatusBtn(){
     const statusBtn = document.querySelector("#adminStatusBtn");
+    const panelArea = document.querySelector("#adminMain");
+    
     statusBtn.addEventListener('click',()=>{
+        const currSodas = MACHINE_STATE['loadedSodas'];
+        console.log("clicked");
+//        panelArea.textContent="TEST";
+//        updateAdminMain(['test',{element:'div'},'hey']);
+        clearChildren("#adminMain");
+        const adminMain = document.querySelector("#adminMain");
+        
         
     });
 }
@@ -176,6 +221,7 @@ function setAdminMachine(){
     setUpdateBtn();
     
 }
+//END ADMIN BUTTON FUNCTIONALITY
 
 function handleLoad(){
     //init state
@@ -219,6 +265,7 @@ function swapMode(){
 
 function main(){
     handleLoad();
+    //do anything required
 }
 
 document.addEventListener("DOMContentLoaded",main);

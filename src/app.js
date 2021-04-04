@@ -43,7 +43,7 @@ app.post('/api/soda/update', (req,res)=>{
         });
         
         toAdd.save((err,output)=>{
-            res.json("added new soda!\n"+soda);
+            res.json("added new soda!\n"+toAdd);
         });
         
     }else{ //do something involving an already existing soda entry
