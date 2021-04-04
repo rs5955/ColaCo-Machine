@@ -13,11 +13,14 @@ There are two parts to the machine:
 1. Customer interface
     - Select soda listings
     - Dispense sodas (download JSON file)
+    
 ![customer_interface](docs/userInterface.gif)
+
 2. Admin interface
     - check soda machine status
     - add new sodas to lineup
     - edit existing soda data
+    
 ![admin_interface](docs/adminInterface.gif)
 
 ### INSTRUCTIONS
