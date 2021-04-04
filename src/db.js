@@ -28,7 +28,6 @@ const SodaSchema = mongoose.Schema({
     desc: String,
     cost: Number,
     maxQty: Number,
-    currQty: Number,
 });
 
 mongoose.model('Soda', SodaSchema);
@@ -60,10 +59,10 @@ To setup mongoDB:
 
 use CocaCo-Machine
 
-db.sodas.insert({name: "Fizz",desc:"An effervescent fruity experience with hints of grape and coriander",cost:1,maxQty:100,currQty:100});
-db.sodas.insert({name: "Pop",desc:"descPop",cost:1,maxQty:100,currQty:100});
-db.sodas.insert({name: "Cola",desc:"descCola",cost:1,maxQty:200,currQty:200});
-db.sodas.insert({name: "Mega Pop",desc:"descMega",cost:1,maxQty:50,currQty:50});
+db.sodas.insert({name: "Fizz",desc:"An effervescent fruity experience with hints of grape and coriander",cost:1,maxQty:100});
+db.sodas.insert({name: "Pop",desc:"An explosion of flavor that will knock your socks off!",cost:1,maxQty:100});
+db.sodas.insert({name: "Cola",desc:"A basic no nonsense cola that is the perfect pick me up for any occasion.",cost:1,maxQty:200});
+db.sodas.insert({name: "Mega Pop",desc:"Not for the faint of heart.  So flavorful and so invigorating, it should probably be illegal.",cost:1,maxQty:50});
 
 db.sodas.find();
 */

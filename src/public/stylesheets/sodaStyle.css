@@ -13,7 +13,7 @@ body {
 
 
 
-#sodaMachine{
+.sodaMachine{
     background-color: #ffb347;
     border: 4px solid #fa9200;
     padding: 10px;
@@ -31,7 +31,7 @@ body {
 
 }
 
-#machineLabel{
+.machineLabel{
     background-color: #add8e6;
 /*    position: relative;*/
 /*
@@ -50,9 +50,10 @@ body {
 }
 
 
-#sodaList{
+.mainPanel{
 /*    display: inline-block;*/
-    background-color: lightseagreen;
+/*    #188781 #20b2aa*/
+    background-color: #20b2aa;
     border-left: 2px solid black;
     border-right: 2px solid black;
     height: 400px;
@@ -102,7 +103,7 @@ body {
 /*==========*/
 
 /*user menu styles*/
-#statusBar{
+#statusBar, #toolBar{
     background-color: antiquewhite;
     border: 2px solid black;
 /*    width: %;*/
@@ -112,7 +113,7 @@ body {
     overflow: scroll;
 }
 
-#getButton{
+#getButton, #uselessBtn{
     background-color: white;
 /*    border: 2px dotted gray;*/
     border: none;
@@ -120,3 +121,35 @@ body {
     height: 80px;
     padding: 10px;
 }
+
+#swapBtn{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100px;
+    height: 70px;
+}
+
+/*admin toolbar*/
+.grid_items {
+    padding: 3%;
+    display: grid;
+    grid-template-columns: 40% 40%;
+    grid-column-gap: 5%;
+    grid-row-gap: 10px;
+    justify-content: space-around;
+}
+.grid_item {
+    background-color: #ffb347;
+    color: white;
+/*    background-color: grey;*/
+    padding: 5%;
+    border: none;
+}
+.grid_item:hover{
+    background-color: #fa9200;
+}
+.grid_item:active{
+    background-color: #ffbe61;
+}
+/*end admin toolbar*/

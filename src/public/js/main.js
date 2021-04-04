@@ -1,11 +1,10 @@
 const SODA_API = "api/sodas";
 const UPDATE_API = "api/soda/update";
 
-let prevMachineState;
-let state = 0; //0 = user panel, 1 = admin panel
+let inAdminState; //0 = user panel, 1 = admin panel
 
 let sodaSelection; //hold soda obj
-let isBusy = false; //flag to disable soda selection if machine is currently dispensing
+let isBusy; //flag to disable soda selection if machine is currently dispensing
 
 //helper fn to clear all nodes of a selector
 function clearChildren(selector){
@@ -36,7 +35,7 @@ function addSoda(soda){
     toAdd.textContent = soda.name;
     toAdd.addEventListener("click",()=>{
         if(!isBusy){
-            updateStatusBar(["Selection: "+soda.name,"'"+soda.desc+"'","Cost: $"+soda.cost,"Quantity available: "+soda.currQty]);
+            updateStatusBar(["Selection: "+soda.name,"'"+soda.desc+"'","Cost: $"+soda.cost,"Quantity available: "+soda.maxQty]);
             sodaSelection = soda;
         }else{
             console.log("IM BUSY");
@@ -69,19 +68,39 @@ function sleep(ms) {
 
 //this fn is only called when soda selection !== undefined or null
 function getSoda(soda){
-    //TODO: implement soda json download to local fs
+    //TODO: implement soda json download to local fs (can do this last)
+    function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    // Start file download.
+    download("soda.json",JSON.stringify(soda));
+    console.log("soda downloaded!");
 }
 
-//this fn will decrement the soda currQty from the database
+//this fn will decrement the soda maxQty from the database
 function deductSodaQty(soda){
     //TODO: api/soda/update
-
+    const params = {
+        action: "DECREMENT",
+        id: soda._id,
+        
+    }
     fetch(UPDATE_API, {
       method: 'POST', // or 'PUT'
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
       },
-      body: new URLSearchParams(soda),
+      body: new URLSearchParams(params),
     })
     .then(response => response.json())
     .then(data => {
@@ -101,15 +120,19 @@ function setGetButton(){
             if(!sodaSelection){
                 updateStatusBar(["Please Select a Soda"]);  
             }else{
+                sodaList = document.querySelector("#sodaList");
+                sodaList.style.backgroundColor = "#188781";
                 updateStatusBar(["Dispensing soda..."]);
                 isBusy = true;
                 await sleep(2000);
                 //do stuff
+                
                 deductSodaQty(sodaSelection);
                 getSoda(sodaSelection);
 
                 updateStatusBar(["Thank You!"]);
                 //stuff done
+                sodaList.style.backgroundColor = "#20b2aa"
                 await sleep(2000);
                 updateStatusBar(["SELECT A DRINK"]);
                 isBusy = false;
@@ -119,17 +142,56 @@ function setGetButton(){
     });
 }
 
+//add functionality to the admin btn
+function setSwapBtn(){
+    const swapBtn = document.querySelector("#swapBtn");
+    swapBtn.addEventListener('click',()=>{
+       swapMode(); 
+    });
+}
+
+function setAdminMachine(){
+    console.log("setting admin machine");
+    
+}
+
 function handleLoad(){
+    //init state
+    document.querySelector("#userPanel").style.display = "none";
+//    document.querySelector("#adminPanel").style.display = 'none';
+    inAdminState = false;
+    isBusy = false;
+    
+    //load machines
     loadSodas();
     setGetButton();
-    swapMode();
+    
+    setAdminMachine();
+    setSwapBtn();
 }
 
 function swapMode(){
-    if(!state){
-        console.log("STATE = 0");
+    const userPanel = document.querySelector("#userPanel");
+    const adminPanel = document.querySelector("#adminPanel");
+    const swapBtn = document.querySelector("#swapBtn");
+    
+    if(!inAdminState){
+        console.log("inAdminState?: ",inAdminState); //USER PANEL
+        
+        //swap to admin panel
+        userPanel.style.display = "none";
+        adminPanel.style.display = "block";
+        swapBtn.textContent = "USER";
+        inAdminState = true;
+        
     }else{
-        console.log("STATE = 1");
+        console.log("inAdminState?: ",inAdminState); //ADMIN PANEL
+        
+        //swap to user panel
+        adminPanel.style.display = "none";
+        userPanel.style.display = "block";
+        swapBtn.textContent = "ADMIN";
+        inAdminState = false;
     }
 }
 
