@@ -226,8 +226,29 @@ function setStatusBtn(){
         adminMain.appendChild(panelArea);
         panelArea.appendChild(document.createTextNode('STATUS: ONLINE'));
         panelArea.appendChild(document.createElement('br'));
+        panelArea.appendChild(document.createTextNode('================================='));
         panelArea.appendChild(document.createElement('br'));
+        //if there are sodas with qty<10
+        const limitedSodas = currSodas.filter(s=>{return s.maxQty<10});
+        
+        if(limitedSodas.length){
+            panelArea.appendChild(document.createTextNode("RUNNING LOW"));
+            panelArea.appendChild(document.createElement('br'));
+            limitedSodas.map(s=>{
+                panelArea.appendChild(document.createTextNode('- '+s.name));
+                panelArea.appendChild(document.createElement('br'));
+                panelArea.appendChild(document.createTextNode(' only '+s.maxQty+" remaining"));
+                panelArea.appendChild(document.createElement('br'));
+                panelArea.appendChild(document.createTextNode('================================='));
+                panelArea.appendChild(document.createElement('br'));
+            });
+            
+        }
 //        addSodaStatus(currSodas[0]);
+        panelArea.appendChild(document.createTextNode('SODA LIST'));
+        panelArea.appendChild(document.createElement('br'));
+        panelArea.appendChild(document.createElement('br'));
+        
         currSodas.map(s=>{
            addSodaStatus(s); 
         });
@@ -246,6 +267,7 @@ function setUpdateBtn(){
         //B) Add new soda
         
         //.....
+        clearChildren("#adminMain");
     });
 }
 
