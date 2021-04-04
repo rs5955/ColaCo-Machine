@@ -39,8 +39,39 @@ app.post('/api/soda/create', (req, res) => {
         name: req.body.name,
         desc: req.body.desc,
         cost: req.body.cost,
-        maxQty: req.body.qty
-    })
+        maxQty: req.body.maxQty,
+        currQty: req.body.currQty,
+    });
+    
+    soda.save((err,output)=>{
+        res.json(output);    
+    });
+});
+
+app.post('api/soda/update', (req,res)=>{
+    const reqSoda = req.body.soda;
+    
+    Soda.findOne({name: reqSoda.name}, function(err, soda) {
+    if(!err) {
+        if(!soda) {
+            soda = new Soda();
+            soda.name = req.body.name;
+            soda.desc = req.body.desc;
+            soda.cost = req.body.cost;
+            soda.maxQty = req.body.maxQty;
+            soda.currQty = req.body.currQty;
+        }
+        soda.status = req.status;
+        soda.save(function(err) {
+            if(!err) {
+                console.log(soda);
+            }
+            else {
+                console.log("Error: could not save soda: "+soda);
+            }
+        });
+    }
+});
 });
 
 app.listen(process.env.PORT || DEFAULT_PORT, (err) => {

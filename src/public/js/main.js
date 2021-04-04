@@ -1,5 +1,6 @@
 const SODA_API = "http://localhost:3000/api/sodas";
-let sodaSelection = undefined;
+
+let sodaSelection = undefined; //hold soda obj
 let isBusy = false; //flag to disable soda selection if machine is currently dispensing
 
 function test(){
@@ -7,9 +8,21 @@ function test(){
 }
 
 function updateStatusBar(content){
-    console.log(content);
+    console.log(content); //an array
     const statusBar = document.querySelector("#statusBar");
-    statusBar.textContent = content;
+    
+    //clear statusBar
+    while (statusBar.firstChild) {
+        statusBar.removeChild(statusBar.firstChild);
+    }
+    
+    content.map(line=>{
+        const newNode = document.createTextNode(line);
+        statusBar.appendChild(newNode);
+        const lineBreak = document.createElement("br");
+        statusBar.appendChild(lineBreak);
+        
+    });
 }
 
 function addSoda(soda){
@@ -18,7 +31,7 @@ function addSoda(soda){
     toAdd.textContent = soda.name;
     toAdd.addEventListener("click",()=>{
         if(!isBusy){
-            updateStatusBar(soda.name);
+            updateStatusBar(["Selection: "+soda.name,"Cost: $"+soda.cost]);
             sodaSelection = soda;
         }else{
             console.log("IM BUSY");
@@ -28,6 +41,7 @@ function addSoda(soda){
     console.log(soda);
 }
 
+//load all sodas from database into the machine
 function loadSodas(){
     fetch(SODA_API)
     .then(res=>{
@@ -48,31 +62,39 @@ function sleep(ms) {
 
 //this fn is only called when soda selection !== undefined or null
 function getSoda(soda){
-    //implement soda json download
+    //TODO: implement soda json download
 }
 
+//this fn will decrement the soda currQty from the database
+function deductSodaQty(soda){
+    //TODO: 
+}
+
+//add functionality to the get btn
 function setGetButton(){
     const getBtn = document.querySelector("#getButton");
     getBtn.addEventListener('click', async ()=>{
         if(!sodaSelection){
-            updateStatusBar("Please Select a Soda");  
+            updateStatusBar(["Please Select a Soda"]);  
         }else{
-            updateStatusBar("Dispensing soda...");
+            updateStatusBar(["Dispensing soda..."]);
             isBusy = true;
-            await sleep(1000);
+            await sleep(2000);
+            //do stuff
             
             getSoda(sodaSelection);
-            updateStatusBar("Thank You!");
             
+            updateStatusBar(["Thank You!"]);
+            
+            //stuff done
             await sleep(2000);
-            updateStatusBar("SELECT A DRINK");
+            updateStatusBar(["SELECT A DRINK"]);
             isBusy = false;
         }
     });
 }
 
 function handleLoad(){
-    //loads the sodas into the machine
     loadSodas();
     setGetButton();
 }
