@@ -77,7 +77,6 @@ function sleep(ms) {
 
 //this fn is only called when soda selection !== undefined or null
 function getSoda(soda){
-    //TODO: implement soda json download to local fs (can do this last)
     function download(filename, text) {
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(text));
@@ -117,7 +116,6 @@ function putSoda(params){
 }
 //this fn will decrement the soda maxQty from the database
 function deductSodaQty(soda){
-    //TODO: api/soda/update
     putSoda({
         action: "DECREMENT",
         id: soda._id,

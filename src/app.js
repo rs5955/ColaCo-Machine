@@ -15,7 +15,6 @@ app.use(express.static(publicPath));
 
 // body parser
 app.use(express.urlencoded({ extended: false }));
-//app.set('view engine', 'hbs');
 
 const Soda = mongoose.model('Soda');
 
