@@ -191,18 +191,46 @@ function setSwapBtn(){
 //        
 //    });
 //}
+//this fn is for the admin main panel only
+function addSodaStatus(soda){
+    const panelArea = document.querySelector("#panelArea");
+    const toAdd = document.createElement("p");
+    toAdd.appendChild(document.createTextNode("Name: "+soda.name));
+    toAdd.appendChild(document.createElement('br'));
+    toAdd.appendChild(document.createTextNode("Description: "+soda.desc));
+    toAdd.appendChild(document.createElement('br'));
+    toAdd.appendChild(document.createTextNode("Cost: "+soda.cost));
+    toAdd.appendChild(document.createElement('br'));
+    toAdd.appendChild(document.createTextNode("Qty: "+soda.maxQty));
+    toAdd.appendChild(document.createElement('br'));
+    toAdd.appendChild(document.createElement('br'));
+    panelArea.appendChild(toAdd);
+}
 
 function setStatusBtn(){
     const statusBtn = document.querySelector("#adminStatusBtn");
-    const panelArea = document.querySelector("#adminMain");
-    
+    const adminMain = document.querySelector("#adminMain");
+//    const panelArea = document.querySelector("#adminMain");
+
     statusBtn.addEventListener('click',()=>{
         const currSodas = MACHINE_STATE['loadedSodas'];
         console.log("clicked");
-//        panelArea.textContent="TEST";
-//        updateAdminMain(['test',{element:'div'},'hey']);
+        
+        
         clearChildren("#adminMain");
-        const adminMain = document.querySelector("#adminMain");
+        const panelArea = document.createElement('div');
+        panelArea.setAttribute('id','panelArea');
+        panelArea.style.textAlign = 'left';
+        panelArea.style.padding = '10px';
+        
+        adminMain.appendChild(panelArea);
+        panelArea.appendChild(document.createTextNode('STATUS: ONLINE'));
+        panelArea.appendChild(document.createElement('br'));
+        panelArea.appendChild(document.createElement('br'));
+//        addSodaStatus(currSodas[0]);
+        currSodas.map(s=>{
+           addSodaStatus(s); 
+        });
         
         
     });
@@ -210,8 +238,14 @@ function setStatusBtn(){
 
 function setUpdateBtn(){
     const updateBtn = document.querySelector("#adminUpdateBtn");
+    const panelArea = document.querySelector("#adminMain");
+    
     updateBtn.addEventListener('click',()=>{
+        //TODO: implement two options:
+        //A) Update existing soda
+        //B) Add new soda
         
+        //.....
     });
 }
 
@@ -259,6 +293,7 @@ function swapMode(){
         adminPanel.style.display = "none";
         userPanel.style.display = "block";
         swapBtn.textContent = "ADMIN";
+        clearChildren('#adminMain');
         MACHINE_STATE['inAdminState'] = false;
     }
 }
