@@ -57,8 +57,20 @@ app.post('/api/soda/update', (req,res)=>{
                     //decrement qty (the decrement req is only sent if the soda qty>1)
                     console.log("decrementing soda cnt of: ",soda.name);
                     soda.maxQty -= 1;
+                }else if(action==="UPDATE"){
+                    console.log("updating soda of: ",soda.name);
+                    const toChange = {
+                        name: soda.name, //cant change soda name
+                        desc: reqBody.desc,
+                        cost: reqBody.cost,
+                        maxQty: reqBody.maxQty,
+                    }
+                    soda.desc = reqBody.desc;
+                    soda.cost = reqBody.cost;
+                    soda.maxQty = reqBody.maxQty;
+                    
                 }else{
-                    console.log("idk what the action is");
+                    console.log("unsure what the action is!");
                 }
             }
             soda.save((err,output)=>{

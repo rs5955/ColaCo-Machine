@@ -95,14 +95,8 @@ function getSoda(soda){
     console.log("soda downloaded!");
 }
 
-//this fn will decrement the soda maxQty from the database
-function deductSodaQty(soda){
-    //TODO: api/soda/update
-    const params = {
-        action: "DECREMENT",
-        id: soda._id,
-        
-    }
+function putSoda(params){
+    //put fetch request
     fetch(UPDATE_API, {
       method: 'POST', // or 'PUT'
       headers: {
@@ -118,6 +112,34 @@ function deductSodaQty(soda){
     .catch((error) => {
         console.error('Error:', error);
     });
+}
+//this fn will decrement the soda maxQty from the database
+function deductSodaQty(soda){
+    //TODO: api/soda/update
+    putSoda({
+        action: "DECREMENT",
+        id: soda._id,
+    });
+//    const params = {
+//        action: "DECREMENT",
+//        id: soda._id,
+//        
+//    }
+//    fetch(UPDATE_API, {
+//      method: 'POST', // or 'PUT'
+//      headers: {
+//        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//      },
+//      body: new URLSearchParams(params),
+//    })
+//    .then(response => response.json())
+//    .then(data => {
+//        loadSodas();
+//        console.log('Success:', data);
+//    })
+//    .catch((error) => {
+//        console.error('Error:', error);
+//    });
 }
 
 //add functionality to the get btn
@@ -160,38 +182,7 @@ function setSwapBtn(){
 }
 
 //ADMIN BUTTON FUNCTIONALITY
-//update the text inside the admin panel
-//function updateAdminMain(content){
-//    console.log(...content); //an array
-//    clearChildren("#adminMain")
-//    const adminMain = document.querySelector("#adminMain");
-//    
-//    content.map(line=>{
-//        if (typeof line === 'string' || line instanceof String){
-//            const newNode = document.createTextNode(line);
-//            adminMain.appendChild(newNode);
-//        }else{
-//            /* 
-//            
-//            eg.
-//            {
-//                element: p,
-//                text: zzz, //optional
-//            }
-//            */
-//            const newNode = document.createElement(line['element']);
-//            console.log(line['element']===undefined);
-//            if(line['element']!==undefined){
-//                newNode.appendChild(document.createTextNode(line['text']));
-//            }else{
-//                console.log("TEST");
-//            }
-//            adminMain.appendChild(newNode);   
-//        }
-//        
-//    });
-//}
-//this fn is for the admin main panel only
+//helper fn for the admin main panel
 function addSodaStatus(soda){
     const panelArea = document.querySelector("#panelArea");
     const toAdd = document.createElement("p");
@@ -232,19 +223,19 @@ function setStatusBtn(){
         const limitedSodas = currSodas.filter(s=>{return s.maxQty<10});
         
         if(limitedSodas.length){
-            panelArea.appendChild(document.createTextNode("RUNNING LOW"));
+            panelArea.appendChild(document.createTextNode("RUNNING LOW (qty < 10)"));
             panelArea.appendChild(document.createElement('br'));
             limitedSodas.map(s=>{
                 panelArea.appendChild(document.createTextNode('- '+s.name));
                 panelArea.appendChild(document.createElement('br'));
                 panelArea.appendChild(document.createTextNode(' only '+s.maxQty+" remaining"));
                 panelArea.appendChild(document.createElement('br'));
-                panelArea.appendChild(document.createTextNode('================================='));
-                panelArea.appendChild(document.createElement('br'));
+                
             });
+            panelArea.appendChild(document.createTextNode('================================='));
+                panelArea.appendChild(document.createElement('br'));
             
         }
-//        addSodaStatus(currSodas[0]);
         panelArea.appendChild(document.createTextNode('SODA LIST'));
         panelArea.appendChild(document.createElement('br'));
         panelArea.appendChild(document.createElement('br'));
@@ -256,6 +247,163 @@ function setStatusBtn(){
         
     });
 }
+function handleAddFormBtn(evt){
+    evt.preventDefault();
+}
+//adds a new soda to the DB
+function addNewHandler(){
+    clearChildren("#adminMain");
+    const panelArea = document.querySelector("#adminMain");
+    panelArea.appendChild(document.createTextNode('ADD NEW SODA'));
+    panelArea.innerHTML += `<br><form method="POST" action="/api/soda/update">
+						<p><label for="name">Product Name:</label> <input id="name" type="text" name="name" required></p>
+						<p><label for="desc">Description:</label> <input id="desc" type="text" name="desc" required></p>
+						<p><label for="cost">Cost:</label> <input id="cost" type="number" min='0' name="cost" required></p>
+						<p><label for="maxQty">Max Qty:</label> <input type="number" id="maxQty" min='0' name="maxQty" required></p>
+						<p><input id="addFormBtn" type="submit" value="Add"></p>
+					</form>`;
+    const addFormBtn = document.querySelector("#addFormBtn");
+    addFormBtn.addEventListener('click',(evt)=>{
+        evt.preventDefault();
+        const name = document.querySelector('#name').value;
+        const desc = document.querySelector('#desc').value;
+        const cost = document.querySelector('#cost').value;
+        const maxQty = document.querySelector('#maxQty').value;
+        
+        const curr = MACHINE_STATE['loadedSodas'];
+        const existing = curr.filter(s=>{return s.name===name});
+        
+        if (name&&desc&&cost&&maxQty&&(existing.length===0)){
+            console.log("sending req");
+            //all inputs filled
+            const params = {
+                action: "ADD",
+                name: name,
+                desc: desc,
+                cost: cost,
+                maxQty: maxQty,
+            }
+            putSoda(params);
+            clearChildren('#adminMain');
+            panelArea.appendChild(document.createTextNode('SODA ADDED!'));
+//            fetch(UPDATE_API, {
+//              method: 'POST', // or 'PUT'
+//              headers: {
+//                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//              },
+//              body: new URLSearchParams(params),
+//            })
+//            .then(response => response.json())
+//            .then(data => {
+//                loadSodas();
+//                console.log('Success:', data);
+//            })
+//            .catch((error) => {
+//                console.error('Error:', error);
+//            });
+//            
+        }else{
+            if(existing.length>0){
+                console.log("product already exists");
+            }else{
+                console.log("missing inputs");
+            }
+        }
+    });
+}
+
+//helper fn to lead into form section
+function addExistingHelper(sodaName,curr){
+    const sodaObj = curr.filter(s=>{return s.name===sodaName})[0];
+    console.log(sodaObj);
+    if(sodaObj){ 
+        clearChildren("#adminMain");
+        const panelArea = document.querySelector("#adminMain");
+        panelArea.appendChild(document.createTextNode('UPDATE '+sodaObj.name));
+        panelArea.appendChild(document.createElement('br'));
+        panelArea.appendChild(document.createTextNode('==========================='));
+        panelArea.appendChild(document.createElement('br'));
+        
+        panelArea.innerHTML += `<form>
+            Name: `+sodaObj.name+`    
+            <p><label for="desc">Description:</label> <input id="desc" type="text" name="desc" required></p>
+            <p><label for="cost">Cost:</label> <input id="cost" type="number" min='0' name="cost" required></p>
+            <p><label for="maxQty">Max Qty:</label> <input type="number" id="maxQty" min='0' name="maxQty" required></p>
+            <p><input id="submitUpdateBtn" type="submit" value="Update"></p>
+        </form>`;
+        
+        const desc = document.querySelector('#desc');
+        const cost = document.querySelector('#cost');
+        const maxQty = document.querySelector('#maxQty');
+
+        desc.value = sodaObj.desc;
+        cost.value = sodaObj.cost;
+        maxQty.value = sodaObj.maxQty;
+        
+        document.querySelector('#submitUpdateBtn').addEventListener('click',()=>{
+            if(desc.value && cost.value && maxQty.value){
+                console.log("sending req");
+                //all inputs filled
+                const params = {
+                    action: "UPDATE",
+                    id: sodaObj._id,
+                    name: sodaObj.name,
+                    desc: desc.value,
+                    cost: cost.value,
+                    maxQty: maxQty.value,
+                }
+                putSoda(params);
+//                fetch(UPDATE_API, {
+//                  method: 'POST', // or 'PUT'
+//                  headers: {
+//                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+//                  },
+//                  body: new URLSearchParams(params),
+//                })
+//                .then(response => response.json())
+//                .then(data => {
+//                    loadSodas();
+//                    console.log('Success:', data);
+//                })
+//                .catch((error) => {
+//                    console.error('Error:', error);
+//                });
+            }
+        });
+    }
+}
+
+//adds a certain qty of an existing soda to DB
+function addExistingHandler(){
+    clearChildren("#adminMain");
+    const panelArea = document.querySelector("#adminMain");
+    panelArea.appendChild(document.createTextNode('ADD EXISTING SODA'));
+    panelArea.appendChild(document.createElement('br'));
+    panelArea.appendChild(document.createTextNode('==========================='));
+    panelArea.appendChild(document.createElement('br'));
+    
+    const curr = MACHINE_STATE['loadedSodas'];
+    let selectOptions = '';
+    curr.map(s=>{
+       selectOptions+='<option value='+s.name+'>'+s.name+'</option>'; 
+    });
+    
+    panelArea.innerHTML += `<form method="POST" action="/api/soda/update">
+        Select SODA to Update:<br><br>
+        <select id="sodaName" name="sodaName">
+            <option value=''>--</option>`+selectOptions+`
+        </select>
+        <input id="existingSelectBtn" type="submit" value="Edit Soda">
+    </form>`;
+    
+    const existingSelectBtn = document.querySelector('#existingSelectBtn');
+    existingSelectBtn.addEventListener('click',(evt)=>{
+        evt.preventDefault();
+        const sodaOption = document.querySelector('#sodaName').value;
+        addExistingHelper(sodaOption,curr);
+    });
+}
+
 
 function setUpdateBtn(){
     const updateBtn = document.querySelector("#adminUpdateBtn");
@@ -268,6 +416,22 @@ function setUpdateBtn(){
         
         //.....
         clearChildren("#adminMain");
+        
+        //Add buttons
+        const addNewBtn = document.createElement("button");
+        addNewBtn.textContent = 'Add New Soda';
+        addNewBtn.setAttribute('class','updateBtn');
+        addNewBtn.addEventListener('click',addNewHandler);
+        panelArea.appendChild(addNewBtn);
+        
+        panelArea.appendChild(document.createElement('br'));
+        panelArea.appendChild(document.createElement('br'));
+        
+        const updateSodaBtn = document.createElement("button");
+        updateSodaBtn.textContent = 'Add Existing Soda';
+        updateSodaBtn.setAttribute('class','updateBtn');
+        updateSodaBtn.addEventListener('click',addExistingHandler);
+        panelArea.appendChild(updateSodaBtn);
     });
 }
 

@@ -153,3 +153,26 @@ body {
     background-color: #ffbe61;
 }
 /*end admin toolbar*/
+.updateBtn{
+    background-color: lightyellow;
+    padding: 10px;
+    margin: 30px;
+    border: none;
+    height: 100px;
+}
+form{
+    padding: 20px;
+    background-color: lightcyan;
+    text-align: left;
+    margin-top: 30px;
+}
+form input[type=text],input[type=number]{
+    margin: 10px;
+    width: 200px;
+    
+}
+form input[type=submit]{
+    padding: 5px;
+    margin: 10px;
+    text-align: center;
+}
