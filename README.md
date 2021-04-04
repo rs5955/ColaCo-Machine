@@ -28,22 +28,26 @@ There are two parts to the machine:
 You will need Node.js, npm and mongoDB installed to run this project
 1. Visit the [official Node.js website](https://nodejs.org/) and download the installer. Follow the setups outlined on the site.
 2. You should be able to run the following commands
+
     $ node --version
     v12.18.3
 
     $ npm --version
     6.14.6
 3. Update npm if needed
+
     $ npm install npm -g
 
 4. To install MongoDB, use a package manager like apt on Linux or homebrew on MacOS (brew install mongodb)… or follow the install instructions for your operating system on [MongoDB's site](https://www.mongodb.com/)
 
 5. Install the project
+
     $ git clone https://github.com/rs5955/ColaCo-Machine
     $ cd ColaCo-Machine
     $ npm install
 
 6. Set the database with initial entries
+
     $ mongo
     $ use ColaCo-Machine
     Copy and Paste the snippet below into the mongo shell and press ``ENTER``
@@ -56,6 +60,7 @@ You will need Node.js, npm and mongoDB installed to run this project
     $ db.sodas.find()
     
 7. Run the app
+
     $ node src/app.js
 
 8. Head to [localhost:3000/](http://localhost:3000/) to view the virtual soda machine
