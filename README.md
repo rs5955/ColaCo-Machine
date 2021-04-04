@@ -23,6 +23,8 @@ There are two parts to the machine:
     
 ![admin_interface](docs/adminInterface.gif)
 
+Users can swap between both interfaces by clicking on the button on the bottom left corner of the page.
+
 ### INSTRUCTIONS
 
 You will need Node.js, npm and mongoDB installed to run this project
