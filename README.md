@@ -32,10 +32,13 @@ You will need Node.js, npm and mongoDB installed to run this project
 2. You should be able to run the following commands
 
     $ node --version
+    
     v12.18.3
 
     $ npm --version
+    
     6.14.6
+    
 3. Update npm if needed
 
     $ npm install npm -g
@@ -45,20 +48,26 @@ You will need Node.js, npm and mongoDB installed to run this project
 5. Install the project
 
     $ git clone https://github.com/rs5955/ColaCo-Machine
+    
     $ cd ColaCo-Machine
+    
     $ npm install
 
 6. Set the database with initial entries
 
     $ mongo
+    
     $ use ColaCo-Machine
+    
     Copy and Paste the snippet below into the mongo shell and press ``ENTER``
+    
     ```
     db.sodas.insert({name: "Fizz",desc:"An effervescent fruity experience with hints of grape and coriander",cost:1,maxQty:100});
     db.sodas.insert({name: "Pop",desc:"An explosion of flavor that will knock your socks off!",cost:1,maxQty:100});
     db.sodas.insert({name: "Cola",desc:"A basic no nonsense cola that is the perfect pick me up for any occasion.",cost:1,maxQty:200});
     db.sodas.insert({name: "Mega Pop",desc:"Not for the faint of heart.  So flavorful and so invigorating, it should probably be illegal.",cost:1,maxQty:50});
     ```
+    
     $ db.sodas.find()
     
 7. Run the app
