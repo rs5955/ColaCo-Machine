@@ -48,18 +48,25 @@ app.post('/api/soda/create', (req, res) => {
     });
 });
 
-app.post('api/soda/update', (req,res)=>{
-    const reqSoda = req.body.soda;
+app.post('/api/soda/update', (req,res)=>{
+    console.log("UPDATING SODA...");
+    const reqSoda = JSON.parse(JSON.stringify(req.body));
+    console.log("name",reqSoda.name);
     
-    Soda.findOne({name: reqSoda.name}, function(err, soda) {
+    Soda.findOne({_id: reqSoda._id}, function(err, soda) {
+    console.log("inside HERE");
     if(!err) {
         if(!soda) {
+            console.log("MAKING SODA");
             soda = new Soda();
             soda.name = req.body.name;
             soda.desc = req.body.desc;
             soda.cost = req.body.cost;
             soda.maxQty = req.body.maxQty;
             soda.currQty = req.body.currQty;
+        }else{
+            console.log("I HAVE THE SODA",soda);
+            soda.currQty -= 1;
         }
         soda.status = req.status;
         soda.save(function(err) {

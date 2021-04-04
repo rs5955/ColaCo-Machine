@@ -1,4 +1,5 @@
-const SODA_API = "http://localhost:3000/api/sodas";
+const SODA_API = "api/sodas";
+const UPDATE_API = "api/soda/update";
 
 let sodaSelection = undefined; //hold soda obj
 let isBusy = false; //flag to disable soda selection if machine is currently dispensing
@@ -67,7 +68,22 @@ function getSoda(soda){
 
 //this fn will decrement the soda currQty from the database
 function deductSodaQty(soda){
-    //TODO: 
+    //TODO: api/soda/update
+
+    fetch(UPDATE_API, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+      body: new URLSearchParams(soda),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 }
 
 //add functionality to the get btn
@@ -81,11 +97,10 @@ function setGetButton(){
             isBusy = true;
             await sleep(2000);
             //do stuff
-            
+            deductSodaQty(sodaSelection);
             getSoda(sodaSelection);
             
             updateStatusBar(["Thank You!"]);
-            
             //stuff done
             await sleep(2000);
             updateStatusBar(["SELECT A DRINK"]);
