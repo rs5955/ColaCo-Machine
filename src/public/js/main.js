@@ -92,7 +92,7 @@ function getSoda(soda){
     }
 
     // Start file download.
-    download("soda.json",JSON.stringify(soda));
+    download(soda.name+".json",JSON.stringify(soda));
     console.log("soda downloaded!");
 }
 
@@ -128,27 +128,33 @@ function deductSodaQty(soda){
 function setGetButton(){
     const getBtn = document.querySelector("#getButton");
     getBtn.addEventListener('click', async ()=>{
+        const currSoda = MACHINE_STATE['sodaSelection'];
         if(!MACHINE_STATE['isBusy']){
-            if(!MACHINE_STATE['sodaSelection']){
+            if(!currSoda){
                 updateStatusBar(["Please Select a Soda"]);  
             }else{
-                sodaList = document.querySelector("#sodaList");
-                sodaList.style.backgroundColor = "#188781";
-                updateStatusBar(["Dispensing soda..."]);
-                MACHINE_STATE['isBusy'] = true;
-                await sleep(2000);
-                //do stuff
-                
-                deductSodaQty(MACHINE_STATE['sodaSelection']);
-                getSoda(MACHINE_STATE['sodaSelection']);
+                //check if qty>0
+                if(currSoda.maxQty>0){
+                    sodaList = document.querySelector("#sodaList");
+                    sodaList.style.backgroundColor = "#188781";
+                    updateStatusBar(["Dispensing soda..."]);
+                    MACHINE_STATE['isBusy'] = true;
+                    await sleep(2000);
+                    //do stuff
 
-                updateStatusBar(["Thank You!"]);
-                //stuff done
-                sodaList.style.backgroundColor = "#20b2aa"
-                await sleep(2000);
-                updateStatusBar(["SELECT A DRINK"]);
-                MACHINE_STATE['isBusy'] = false;
-                MACHINE_STATE['sodaSelection'] = undefined;
+                    deductSodaQty(currSoda);
+                    getSoda(currSoda);
+
+                    updateStatusBar(["Thank You!"]);
+                    //stuff done
+                    sodaList.style.backgroundColor = "#20b2aa"
+                    await sleep(2000);
+                    updateStatusBar(["SELECT A DRINK"]);
+                    MACHINE_STATE['isBusy'] = false;
+                    MACHINE_STATE['sodaSelection'] = undefined;
+                }else{
+                    updateStatusBar(["Please select another soda","We are out of "+currSoda.name]);
+                }
             }
         }
     });
@@ -159,7 +165,6 @@ function setSwapBtn(){
     const swapBtn = document.querySelector("#swapBtn");
     swapBtn.addEventListener('click',()=>{
         swapMode(); 
-//        console.log(MACHINE_STATE['loadedSodas']); //TEMP
     });
 }
 
@@ -184,7 +189,6 @@ function addSodaStatus(soda){
 function setStatusBtn(){
     const statusBtn = document.querySelector("#adminStatusBtn");
     const adminMain = document.querySelector("#adminMain");
-//    const panelArea = document.querySelector("#adminMain");
 
     statusBtn.addEventListener('click',()=>{
         const currSodas = MACHINE_STATE['loadedSodas'];
@@ -291,7 +295,7 @@ function addExistingHelper(sodaName,curr){
         panelArea.appendChild(document.createTextNode('==========================='));
         panelArea.appendChild(document.createElement('br'));
         
-        panelArea.innerHTML += `<form>
+        panelArea.innerHTML += `<br><form method="POST" action="/api/soda/update">
             Name: `+sodaObj.name+`    
             <p><label for="desc">Description:</label> <input id="desc" type="text" name="desc" required></p>
             <p><label for="cost">Cost:</label> <input id="cost" type="number" min='0' name="cost" required></p>
@@ -307,7 +311,8 @@ function addExistingHelper(sodaName,curr){
         cost.value = sodaObj.cost;
         maxQty.value = sodaObj.maxQty;
         
-        document.querySelector('#submitUpdateBtn').addEventListener('click',()=>{
+        document.querySelector('#submitUpdateBtn').addEventListener('click',(evt)=>{
+            evt.preventDefault();
             if(desc.value && cost.value && maxQty.value){
                 console.log("sending req");
                 //all inputs filled
@@ -321,6 +326,8 @@ function addExistingHelper(sodaName,curr){
                 }
                 putSoda(params);
                 loadSodas(); //update machine with changed properties
+                clearChildren("#adminMain");
+                panelArea.appendChild(document.createTextNode(sodaObj.name+' UPDATED!'));
             }
         });
     }

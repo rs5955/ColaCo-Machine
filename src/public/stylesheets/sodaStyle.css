@@ -8,7 +8,6 @@
 
 body {
     background-color: lightsteelblue;
-/*    position: relative;*/
 }
 
 
@@ -17,14 +16,12 @@ body {
     background-color: #ffb347;
     border: 4px solid #fa9200;
     padding: 10px;
-/*    or absolute*/
     position: relative;
     left: 0px;
     top: 0px;
     margin-left: auto; 
     margin-right: auto; 
     width: 500px; /* Need a specific value to work */
-    
     height: 90%;
     margin-top: 10px;
     padding: 10px;
@@ -33,13 +30,6 @@ body {
 
 .machineLabel{
     background-color: #add8e6;
-/*    position: relative;*/
-/*
-    position: absolute;
-    left: 0;
-    top: 0;
-*/
-/*    margin: 10px;*/
     height: 10%;
     width: 100%;
     font-weight: bold;
@@ -51,28 +41,16 @@ body {
 
 
 .mainPanel{
-/*    display: inline-block;*/
-/*    #188781 #20b2aa*/
     background-color: #20b2aa;
     border-left: 2px solid black;
     border-right: 2px solid black;
     height: 400px;
-/*    width: 50%;*/
     position: relative;
     overflow: scroll;
     text-align: center;
 }
 #userMenu{
-/*    display: inline-block;*/
     background-color: gray;
-/*    border: 2px solid black;*/
-/*
-    width: 50%;
-    height: 100%;
-*/
-/*    width: 200px;*/
-/*    height: 100px;*/
-/*    height: 1000px;*/
     position: relative;
 }
 
@@ -84,7 +62,6 @@ body {
     box-shadow: 2px 2px 5px gray;
     margin: 10px;
     height: 100px;
-/*    width: 100px;*/
     width: 40%;
     background-color: white;
     display: inline-block;
@@ -115,7 +92,6 @@ body {
 
 #getButton, #uselessBtn{
     background-color: white;
-/*    border: 2px dotted gray;*/
     border: none;
     width: 100%;
     height: 80px;
@@ -142,7 +118,6 @@ body {
 .grid_item {
     background-color: #ffb347;
     color: white;
-/*    background-color: grey;*/
     padding: 5%;
     border: none;
 }
