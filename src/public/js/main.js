@@ -1,10 +1,12 @@
 const SODA_API = "api/sodas";
 const UPDATE_API = "api/soda/update";
 
-let inAdminState; //0 = user panel, 1 = admin panel
-
-let sodaSelection; //hold soda obj
-let isBusy; //flag to disable soda selection if machine is currently dispensing
+const MACHINE_STATE = {
+    loadedSodas: [], //list of sodas 
+    inAdminState: undefined, //0 = user panel, 1 = admin panel
+    sodaSelection: undefined, //hold soda obj
+    isBusy: undefined, //flag to disable soda selection if machine is currently dispensing
+};
 
 //helper fn to clear all nodes of a selector
 function clearChildren(selector){
@@ -34,9 +36,9 @@ function addSoda(soda){
     toAdd.classList.add("soda");
     toAdd.textContent = soda.name;
     toAdd.addEventListener("click",()=>{
-        if(!isBusy){
+        if(!MACHINE_STATE['isBusy']){
             updateStatusBar(["Selection: "+soda.name,"'"+soda.desc+"'","Cost: $"+soda.cost,"Quantity available: "+soda.maxQty]);
-            sodaSelection = soda;
+            MACHINE_STATE['sodaSelection'] = soda;
         }else{
             console.log("IM BUSY");
         }
@@ -44,6 +46,7 @@ function addSoda(soda){
     document.querySelector("#sodaList").appendChild(toAdd);
     console.log("Added: ",soda);
 }
+
 
 //load all sodas from database into the machine
 function loadSodas(){
@@ -55,7 +58,9 @@ function loadSodas(){
         return res.json();
     })
     .then(sodas=>{
+        MACHINE_STATE['loadedSodas'] = [];
         sodas.map(s=>{
+            MACHINE_STATE['loadedSodas'].push(s);
             addSoda(s);
         });
     });
@@ -116,27 +121,27 @@ function deductSodaQty(soda){
 function setGetButton(){
     const getBtn = document.querySelector("#getButton");
     getBtn.addEventListener('click', async ()=>{
-        if(!isBusy){
-            if(!sodaSelection){
+        if(!MACHINE_STATE['isBusy']){
+            if(!MACHINE_STATE['sodaSelection']){
                 updateStatusBar(["Please Select a Soda"]);  
             }else{
                 sodaList = document.querySelector("#sodaList");
                 sodaList.style.backgroundColor = "#188781";
                 updateStatusBar(["Dispensing soda..."]);
-                isBusy = true;
+                MACHINE_STATE['isBusy'] = true;
                 await sleep(2000);
                 //do stuff
                 
-                deductSodaQty(sodaSelection);
-                getSoda(sodaSelection);
+                deductSodaQty(MACHINE_STATE['sodaSelection']);
+                getSoda(MACHINE_STATE['sodaSelection']);
 
                 updateStatusBar(["Thank You!"]);
                 //stuff done
                 sodaList.style.backgroundColor = "#20b2aa"
                 await sleep(2000);
                 updateStatusBar(["SELECT A DRINK"]);
-                isBusy = false;
-                sodaSelection = undefined;
+                MACHINE_STATE['isBusy'] = false;
+                MACHINE_STATE['sodaSelection'] = undefined;
             }
         }
     });
@@ -146,12 +151,29 @@ function setGetButton(){
 function setSwapBtn(){
     const swapBtn = document.querySelector("#swapBtn");
     swapBtn.addEventListener('click',()=>{
-       swapMode(); 
+        swapMode(); 
+        console.log(MACHINE_STATE['loadedSodas']); //TEMP
+    });
+}
+
+function setStatusBtn(){
+    const statusBtn = document.querySelector("#adminStatusBtn");
+    statusBtn.addEventListener('click',()=>{
+        
+    });
+}
+
+function setUpdateBtn(){
+    const updateBtn = document.querySelector("#adminUpdateBtn");
+    updateBtn.addEventListener('click',()=>{
+        
     });
 }
 
 function setAdminMachine(){
     console.log("setting admin machine");
+    setStatusBtn();
+    setUpdateBtn();
     
 }
 
@@ -159,8 +181,8 @@ function handleLoad(){
     //init state
     document.querySelector("#userPanel").style.display = "none";
 //    document.querySelector("#adminPanel").style.display = 'none';
-    inAdminState = false;
-    isBusy = false;
+    MACHINE_STATE['inAdminState'] = false;
+    MACHINE_STATE['isBusy'] = false;
     
     //load machines
     loadSodas();
@@ -175,23 +197,23 @@ function swapMode(){
     const adminPanel = document.querySelector("#adminPanel");
     const swapBtn = document.querySelector("#swapBtn");
     
-    if(!inAdminState){
-        console.log("inAdminState?: ",inAdminState); //USER PANEL
+    if(!MACHINE_STATE['inAdminState']){
+        console.log("inAdminState?: ",MACHINE_STATE['inAdminState']); //USER PANEL
         
         //swap to admin panel
         userPanel.style.display = "none";
         adminPanel.style.display = "block";
         swapBtn.textContent = "USER";
-        inAdminState = true;
+        MACHINE_STATE['inAdminState'] = true;
         
     }else{
-        console.log("inAdminState?: ",inAdminState); //ADMIN PANEL
+        console.log("inAdminState?: ",MACHINE_STATE['inAdminState']); //ADMIN PANEL
         
         //swap to user panel
         adminPanel.style.display = "none";
         userPanel.style.display = "block";
         swapBtn.textContent = "ADMIN";
-        inAdminState = false;
+        MACHINE_STATE['inAdminState'] = false;
     }
 }
 

@@ -55,9 +55,11 @@ mongoose.connect(dbconf,{useNewUrlParser: true, useUnifiedTopology: true}, (err,
 });
 
 /*
-To setup mongoDB:
+- To setup mongoDB:
 
 use CocaCo-Machine
+
+- copy-paste below into mongo shell
 
 db.sodas.insert({name: "Fizz",desc:"An effervescent fruity experience with hints of grape and coriander",cost:1,maxQty:100});
 db.sodas.insert({name: "Pop",desc:"An explosion of flavor that will knock your socks off!",cost:1,maxQty:100});
