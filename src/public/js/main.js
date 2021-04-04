@@ -34,6 +34,7 @@ function updateStatusBar(content){
     });
 }
 
+//add soda to the machine interface
 function addSoda(soda){
     const toAdd = document.createElement("div");
     toAdd.classList.add("soda");
@@ -95,6 +96,7 @@ function getSoda(soda){
     console.log("soda downloaded!");
 }
 
+//stores updated values of soda to server
 function putSoda(params){
     //put fetch request
     fetch(UPDATE_API, {
@@ -120,26 +122,6 @@ function deductSodaQty(soda){
         action: "DECREMENT",
         id: soda._id,
     });
-//    const params = {
-//        action: "DECREMENT",
-//        id: soda._id,
-//        
-//    }
-//    fetch(UPDATE_API, {
-//      method: 'POST', // or 'PUT'
-//      headers: {
-//        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//      },
-//      body: new URLSearchParams(params),
-//    })
-//    .then(response => response.json())
-//    .then(data => {
-//        loadSodas();
-//        console.log('Success:', data);
-//    })
-//    .catch((error) => {
-//        console.error('Error:', error);
-//    });
 }
 
 //add functionality to the get btn
@@ -177,7 +159,7 @@ function setSwapBtn(){
     const swapBtn = document.querySelector("#swapBtn");
     swapBtn.addEventListener('click',()=>{
         swapMode(); 
-        console.log(MACHINE_STATE['loadedSodas']); //TEMP
+//        console.log(MACHINE_STATE['loadedSodas']); //TEMP
     });
 }
 
@@ -198,6 +180,7 @@ function addSodaStatus(soda){
     panelArea.appendChild(toAdd);
 }
 
+//adds functionality to the "status" button
 function setStatusBtn(){
     const statusBtn = document.querySelector("#adminStatusBtn");
     const adminMain = document.querySelector("#adminMain");
@@ -286,22 +269,6 @@ function addNewHandler(){
             putSoda(params);
             clearChildren('#adminMain');
             panelArea.appendChild(document.createTextNode('SODA ADDED!'));
-//            fetch(UPDATE_API, {
-//              method: 'POST', // or 'PUT'
-//              headers: {
-//                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//              },
-//              body: new URLSearchParams(params),
-//            })
-//            .then(response => response.json())
-//            .then(data => {
-//                loadSodas();
-//                console.log('Success:', data);
-//            })
-//            .catch((error) => {
-//                console.error('Error:', error);
-//            });
-//            
         }else{
             if(existing.length>0){
                 console.log("product already exists");
@@ -353,21 +320,7 @@ function addExistingHelper(sodaName,curr){
                     maxQty: maxQty.value,
                 }
                 putSoda(params);
-//                fetch(UPDATE_API, {
-//                  method: 'POST', // or 'PUT'
-//                  headers: {
-//                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-//                  },
-//                  body: new URLSearchParams(params),
-//                })
-//                .then(response => response.json())
-//                .then(data => {
-//                    loadSodas();
-//                    console.log('Success:', data);
-//                })
-//                .catch((error) => {
-//                    console.error('Error:', error);
-//                });
+                loadSodas(); //update machine with changed properties
             }
         });
     }
@@ -404,17 +357,15 @@ function addExistingHandler(){
     });
 }
 
-
+//adds functionality to the "update" button
 function setUpdateBtn(){
     const updateBtn = document.querySelector("#adminUpdateBtn");
     const panelArea = document.querySelector("#adminMain");
     
     updateBtn.addEventListener('click',()=>{
-        //TODO: implement two options:
         //A) Update existing soda
         //B) Add new soda
         
-        //.....
         clearChildren("#adminMain");
         
         //Add buttons
@@ -445,8 +396,8 @@ function setAdminMachine(){
 
 function handleLoad(){
     //init state
-    document.querySelector("#userPanel").style.display = "none";
-//    document.querySelector("#adminPanel").style.display = 'none';
+//    document.querySelector("#userPanel").style.display = "none";
+    document.querySelector("#adminPanel").style.display = 'none';
     MACHINE_STATE['inAdminState'] = false;
     MACHINE_STATE['isBusy'] = false;
     
@@ -464,7 +415,7 @@ function swapMode(){
     const swapBtn = document.querySelector("#swapBtn");
     
     if(!MACHINE_STATE['inAdminState']){
-        console.log("inAdminState?: ",MACHINE_STATE['inAdminState']); //USER PANEL
+        console.log("inAdminState: ",MACHINE_STATE['inAdminState']); //USER PANEL
         
         //swap to admin panel
         userPanel.style.display = "none";
@@ -473,7 +424,7 @@ function swapMode(){
         MACHINE_STATE['inAdminState'] = true;
         
     }else{
-        console.log("inAdminState?: ",MACHINE_STATE['inAdminState']); //ADMIN PANEL
+        console.log("inAdminState: ",MACHINE_STATE['inAdminState']); //ADMIN PANEL
         
         //swap to user panel
         adminPanel.style.display = "none";

@@ -50,8 +50,6 @@ app.post('/api/soda/update', (req,res)=>{
         console.log("reqSoda",reqBody.id);
 
         Soda.findOne({_id: reqBody.id}, function(err, soda) {
-            console.log("inside HERE");
-            
             if(!err) {
                 if(action==="DECREMENT"){
                     //decrement qty (the decrement req is only sent if the soda qty>1)
