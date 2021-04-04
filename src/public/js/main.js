@@ -1,21 +1,25 @@
 const SODA_API = "api/sodas";
 const UPDATE_API = "api/soda/update";
 
-let sodaSelection = undefined; //hold soda obj
+let prevMachineState;
+let state = 0; //0 = user panel, 1 = admin panel
+
+let sodaSelection; //hold soda obj
 let isBusy = false; //flag to disable soda selection if machine is currently dispensing
 
-function test(){
-    console.log("HERE");
+//helper fn to clear all nodes of a selector
+function clearChildren(selector){
+    const toClear = document.querySelector(selector);
+    
+    //clear all children
+    while (toClear.firstChild) {
+        toClear.removeChild(toClear.firstChild);
+    }
 }
 
 function updateStatusBar(content){
-    console.log(content); //an array
-    const statusBar = document.querySelector("#statusBar");
-    
-    //clear statusBar
-    while (statusBar.firstChild) {
-        statusBar.removeChild(statusBar.firstChild);
-    }
+    console.log(...content); //an array
+    clearChildren("#statusBar")
     
     content.map(line=>{
         const newNode = document.createTextNode(line);
@@ -32,24 +36,26 @@ function addSoda(soda){
     toAdd.textContent = soda.name;
     toAdd.addEventListener("click",()=>{
         if(!isBusy){
-            updateStatusBar(["Selection: "+soda.name,"Cost: $"+soda.cost]);
+            updateStatusBar(["Selection: "+soda.name,"'"+soda.desc+"'","Cost: $"+soda.cost,"Quantity available: "+soda.currQty]);
             sodaSelection = soda;
         }else{
             console.log("IM BUSY");
         }
     });
     document.querySelector("#sodaList").appendChild(toAdd);
-    console.log(soda);
+    console.log("Added: ",soda);
 }
 
 //load all sodas from database into the machine
 function loadSodas(){
+    //erase previous listings to renew data
+    clearChildren("#sodaList");
+    
     fetch(SODA_API)
     .then(res=>{
         return res.json();
     })
     .then(sodas=>{
-        console.log(sodas);
         sodas.map(s=>{
             addSoda(s);
         });
@@ -63,7 +69,7 @@ function sleep(ms) {
 
 //this fn is only called when soda selection !== undefined or null
 function getSoda(soda){
-    //TODO: implement soda json download
+    //TODO: implement soda json download to local fs
 }
 
 //this fn will decrement the soda currQty from the database
@@ -79,10 +85,11 @@ function deductSodaQty(soda){
     })
     .then(response => response.json())
     .then(data => {
-      console.log('Success:', data);
+        loadSodas();
+        console.log('Success:', data);
     })
     .catch((error) => {
-      console.error('Error:', error);
+        console.error('Error:', error);
     });
 }
 
@@ -90,21 +97,24 @@ function deductSodaQty(soda){
 function setGetButton(){
     const getBtn = document.querySelector("#getButton");
     getBtn.addEventListener('click', async ()=>{
-        if(!sodaSelection){
-            updateStatusBar(["Please Select a Soda"]);  
-        }else{
-            updateStatusBar(["Dispensing soda..."]);
-            isBusy = true;
-            await sleep(2000);
-            //do stuff
-            deductSodaQty(sodaSelection);
-            getSoda(sodaSelection);
-            
-            updateStatusBar(["Thank You!"]);
-            //stuff done
-            await sleep(2000);
-            updateStatusBar(["SELECT A DRINK"]);
-            isBusy = false;
+        if(!isBusy){
+            if(!sodaSelection){
+                updateStatusBar(["Please Select a Soda"]);  
+            }else{
+                updateStatusBar(["Dispensing soda..."]);
+                isBusy = true;
+                await sleep(2000);
+                //do stuff
+                deductSodaQty(sodaSelection);
+                getSoda(sodaSelection);
+
+                updateStatusBar(["Thank You!"]);
+                //stuff done
+                await sleep(2000);
+                updateStatusBar(["SELECT A DRINK"]);
+                isBusy = false;
+                sodaSelection = undefined;
+            }
         }
     });
 }
@@ -112,6 +122,15 @@ function setGetButton(){
 function handleLoad(){
     loadSodas();
     setGetButton();
+    swapMode();
+}
+
+function swapMode(){
+    if(!state){
+        console.log("STATE = 0");
+    }else{
+        console.log("STATE = 1");
+    }
 }
 
 function main(){

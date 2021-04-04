@@ -107,14 +107,15 @@ body {
     border: 2px solid black;
 /*    width: %;*/
     margin: auto;
-    height: 80px;
+    height: 140px;
     text-align: center;
-    
+    overflow: scroll;
 }
 
 #getButton{
     background-color: white;
-    border: 2px dotted gray;
+/*    border: 2px dotted gray;*/
+    border: none;
     width: 100%;
     height: 80px;
     padding: 10px;

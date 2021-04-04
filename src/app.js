@@ -27,58 +27,39 @@ app.get('/api/sodas', function(req, res) {
     });
 });
 
-app.post('/api/soda/create', (req, res) => {
-    // TODO: create new soda... if save succeeds, send back JSON
-    // representation of saved object
-
-//    name: String,
-//    desc: String,
-//    cost: Number,
-//    maxQty: Number
-    const soda = new Soda({
-        name: req.body.name,
-        desc: req.body.desc,
-        cost: req.body.cost,
-        maxQty: req.body.maxQty,
-        currQty: req.body.currQty,
-    });
-    
-    soda.save((err,output)=>{
-        res.json(output);    
-    });
-});
-
 app.post('/api/soda/update', (req,res)=>{
     console.log("UPDATING SODA...");
     const reqSoda = JSON.parse(JSON.stringify(req.body));
-    console.log("name",reqSoda.name);
+    console.log("reqSoda",reqSoda);
     
     Soda.findOne({_id: reqSoda._id}, function(err, soda) {
-    console.log("inside HERE");
-    if(!err) {
-        if(!soda) {
-            console.log("MAKING SODA");
-            soda = new Soda();
-            soda.name = req.body.name;
-            soda.desc = req.body.desc;
-            soda.cost = req.body.cost;
-            soda.maxQty = req.body.maxQty;
-            soda.currQty = req.body.currQty;
-        }else{
-            console.log("I HAVE THE SODA",soda);
-            soda.currQty -= 1;
+        console.log("inside HERE");
+        if(!err) {
+            if(!soda) {
+                console.log("ADDING SODA TO DB");
+                soda = new Soda();
+                soda.name = reqSoda.name;
+                soda.desc = reqSoda.desc;
+                soda.cost = reqSoda.cost;
+                soda.maxQty = reqSoda.maxQty;
+                soda.currQty = reqSoda.currQty;
+            }else{
+                //decrement currQty (the decrement req is only sent if the soda qty>1)
+                soda.currQty -= 1;
+            }
+            soda.status = req.status;
+            console.log("soda: ",soda);
+            soda.save((err,output)=>{
+                if(!err) {
+                    console.log(soda);
+                }
+                else {
+                    console.log("Error: could not save soda: "+soda);
+                }
+                res.json(output);
+            });
         }
-        soda.status = req.status;
-        soda.save(function(err) {
-            if(!err) {
-                console.log(soda);
-            }
-            else {
-                console.log("Error: could not save soda: "+soda);
-            }
-        });
-    }
-});
+    });
 });
 
 app.listen(process.env.PORT || DEFAULT_PORT, (err) => {
